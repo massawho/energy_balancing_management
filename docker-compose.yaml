@@ -1,0 +1,22 @@
+version: "3"
+services:
+  postgres:
+    image: "postgres:13.2-alpine"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ebm_dev
+    ports:
+      - "5555:5432"
+  app:
+    build: .
+    command: mix phx.server
+    environment:
+      MIX_ENV: "dev"
+    depends_on:
+      - postgres
+    ports:
+      - "4000:4000"
+    volumes:
+      - .:/app
+
