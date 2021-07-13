@@ -1,11 +1,10 @@
-FROM elixir:1.12.0-rc.1-alpine AS build
+FROM elixir:1.12.2-slim AS build
 
 WORKDIR /app
 
 COPY mix.exs mix.lock ./
 
-RUN apk --update add inotify-tools &&\
-    rm -rf /var/cache/apk/* &&\
+RUN apt-get update && apt-get install -y inotify-tools &&\
     mix local.hex --force &&\
     mix local.rebar --force &&\
     mix deps.get
@@ -17,7 +16,7 @@ CMD ["mix", "phx.server"]
 
 
 # MIX RELEASE
-FROM elixir:1.12.0-rc.1-alpine AS release
+FROM elixir:1.12.2-slim AS release
 
 ENV MIX_ENV=prod
 
@@ -33,19 +32,22 @@ RUN mix compile &&\
 
 
 # PREPARE RELEASE IMAGE
-FROM alpine:3.9 AS app
+FROM debian:buster-slim AS app
 
-RUN apk add --no-cache openssl ncurses-libs &&\
-    rm -rf /var/cache/apk/*
+RUN apt-get update && apt-get install -y openssl &&\
+    apt-get clean autoclean &&\
+    apt-get autoremove --yes &&\
+    rm -rf /var/lib/{apt,dpkg,cache,log}/
 
 WORKDIR /app
 
-RUN chown nobody:nobody /app
+RUN chown 1000:1000 /app
 
-USER nobody:nobody
+USER 1000:1000
 
-COPY --from=release --chown=nobody:nobody /app/_build/prod/rel/ebm ./
+COPY --from=release --chown=1000:1000 /app/_build/prod/rel/ebm ./
 
 ENV HOME=/app
 
 CMD ["bin/ebm", "start"]
+
