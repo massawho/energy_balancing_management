@@ -6,8 +6,7 @@ config :ebm, EbmWeb.Endpoint,
 
 config :logger, level: :info
 
-config :ebm, Ebm.Repo,
-  show_sensitive_data_on_connection_error: true
+config :ebm, Ebm.Repo, show_sensitive_data_on_connection_error: true
 
 config :ebm, EbmWeb.Endpoint,
   http: [

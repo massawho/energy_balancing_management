@@ -7,5 +7,4 @@ config :ebm, Ebm.Repo,
   hostname: System.fetch_env!("DB_HOSTNAME"),
   pool_size: String.to_integer(System.get_env("DB_POOL_SIZE") || "10")
 
-config :ebm, EbmWeb.Endpoint,
-  secret_key_base: System.fetch_env!("SECRET_KEY_BASE")
+config :ebm, EbmWeb.Endpoint, secret_key_base: System.fetch_env!("SECRET_KEY_BASE")
