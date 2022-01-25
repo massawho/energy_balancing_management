@@ -13,11 +13,12 @@ defmodule EbmWeb.MetricController do
 
   def create(conn, metric_params) do
     metric_params =
-      put_in(
-        metric_params,
-        ["date_time"],
-        DateTime.to_string(DateTime.utc_now())
-      )
+      metric_params
+      |> put_in(["date_time"], DateTime.to_string(DateTime.utc_now()))
+      |> Map.new(fn
+        {"id", device_ref} -> {"device_ref", device_ref}
+        pair -> pair
+      end)
 
     with {:ok, %Metric{} = metric} <- SM3WMeter.create_metric(metric_params) do
       conn

@@ -4,6 +4,7 @@ defmodule Ebm.SM3WMeter.Metric do
 
   schema "metrics" do
     field :date_time, :utc_datetime
+    field :device_ref, :string
     field :pa, :decimal
     field :pb, :decimal
     field :pc, :decimal
@@ -52,6 +53,7 @@ defmodule Ebm.SM3WMeter.Metric do
     metric
     |> cast(attrs, [
       :date_time,
+      :device_ref,
       :pa,
       :pb,
       :pc,
@@ -94,6 +96,7 @@ defmodule Ebm.SM3WMeter.Metric do
     ])
     |> validate_required([
       :date_time,
+      :device_ref,
       :pa,
       :pb,
       :pc,
