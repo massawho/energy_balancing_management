@@ -1,4 +1,4 @@
-version: "3"
+version: "3.4"
 services:
   postgres:
     image: "postgres:13.2-alpine"
@@ -9,7 +9,10 @@ services:
     ports:
       - "5555:5432"
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: build
     command: mix phx.server
     environment:
       MIX_ENV: "dev"
